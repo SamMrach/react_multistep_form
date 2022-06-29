@@ -10,6 +10,11 @@ const Form=()=>{
         privacy:false,
 
     })
+    const [errors,setErrors]=useState({
+        firstName:"",
+        lastName:"",
+        email :""
+    });
     const steps=[
         {
             id:1,
@@ -34,10 +39,41 @@ const Form=()=>{
         setForm({...formData,[e.target.name]:!formData[e.target.name]});
     }
     const next=()=>{
-        setStep(step+1);
+     if(validatePersonal())
+     setStep(step+1);
+        //if(Object.keys(errors).length === 0)
+        //setStep(step+1);
     }
     const previous=()=>{
         setStep(step-1);
+    }
+    const validatePersonal=()=>{
+        console.log(formData.email )
+        let validated=true;
+        let errs={firstName:"",lastName:"",email:""};
+        if(!formData.firstName){
+           errs.firstName="First Name is required";
+           validated=false; 
+        }
+        
+        if(!formData.lastName){
+            validated=false;
+            errs.lastName="Last Name is required"; 
+        }
+        
+        
+       
+        if(!formData.email){
+            validated=false;  
+        errs.email="Email is required";
+        }
+        if(validated)
+        return true 
+        else{
+            setErrors(errs);
+            return false
+        } 
+        
     }
     return(
         <div class="container p-5 w-50 h-50 shadow rounded mt-5" >
@@ -53,18 +89,21 @@ const Form=()=>{
                     <input name="firstName" value={formData.firstName} onChange={handleChange} type="text" class="form-control" id="floatingTextInput1" placeholder="John"/>
                     <label for="floatingTextInput1">First Name</label>
                   </div>
+                  <p class="text-danger" >{errors.firstName}</p>
                 </div>
                 <div class="col">
                   <div class="form-floating mb-3">
                     <input name="lastName" value={formData.lastName} onChange={handleChange} type="text" class="form-control" id="floatingTextInput2" placeholder="Smith" />
                     <label for="floatingTextInput2">Last Name</label>
                   </div>
+                  <p class="text-danger" >{errors.lastName}</p>
                 </div>
               </div>
               <div class="form-floating mb-3">
-                <input type="email" name="email" value={formData.email} onChange={handleChange} class="form-control" id="floatingEmailInput" placeholder="name@example.com"/>
+                <input type="email" name="email" value={formData.email} onChange={handleChange} class="form-control" id="floatingEmailInput" />
                 <label for="floatingEmailInput">Email address</label>
               </div>
+              <p class="text-danger" >{errors.email}</p>
                 </>
                 ):null
             }
